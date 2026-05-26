@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# Secure Next.js Authentication System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Full-stack Next.js App Router authentication system with JWT sessions, bcrypt password checks, OTP email verification, Cloudflare Turnstile, and role-based access to grades pages.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Single login page for admin and user accounts
+- Email normalization and account lookup in `src/lib/users.ts`
+- bcrypt password comparison
+- OTP generation, server-side storage, and five-minute expiration
+- Gmail SMTP delivery with Nodemailer
+- Cloudflare Turnstile frontend widget and backend token verification
+- JWT auth cookie after OTP verification
+- Protected admin and user grades routes
+- Middleware authorization for role-based access
+- Responsive Tailwind CSS UI
 
-## React Compiler
+## Local Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open `http://127.0.0.1:3000/login`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Default admin account:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Email: `halarez123@gmail.com`
+- Password: `Tala@890`
+
+Second admin account:
+
+- Email: `hhalarez@gmail.com`
+- Password: `Rezt06200`
+- Access: `/admin/grades`
+
+When Turnstile environment variables are not configured in local development, the app shows a checkbox-style local verification button.
+
+OTP codes are never shown on screen. Real OTP email delivery requires Gmail SMTP credentials in `.env.local` or Vercel environment variables.
+
+## Environment Variables
+
+Create `.env.local` for real local email/CAPTCHA testing or configure the same values in Vercel:
+
+```env
+JWT_SECRET=replace-with-a-long-random-secret
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-cloudflare-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-cloudflare-turnstile-secret-key
+EMAIL_USER=your-gmail-address
+EMAIL_APP_PASSWORD=your-gmail-app-password
+```
+
+After changing Vercel environment variables, redeploy the project.
+
+## Routes
+
+- `GET /login`
+- `GET /grades`
+- `GET /admin/grades`
+- `POST /api/auth/login`
+- `POST /api/auth/verify-otp`
+- `POST /api/auth/logout`
+
+## Scripts
+
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run start
 ```
