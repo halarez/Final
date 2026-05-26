@@ -40,14 +40,6 @@ export async function POST(request: NextRequest) {
     if (!emailResult.sent) {
       console.error('OTP email failed', emailResult)
 
-      if (process.env.NODE_ENV !== 'production') {
-        return NextResponse.json({
-          message: `Development OTP for ${normalizedEmail}: ${otp}`,
-          email: normalizedEmail,
-          devOtp: otp,
-        })
-      }
-
       let error = 'OTP email could not be sent. Check EMAIL_USER and the Gmail App Password.'
 
       if (emailResult.reason === 'missing-email-config') {

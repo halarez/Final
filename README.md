@@ -37,7 +37,7 @@ Second admin account:
 
 When Turnstile environment variables are not configured in local development, the app shows a checkbox-style local verification button.
 
-Real OTP email delivery requires Gmail SMTP credentials in `.env.local` or Vercel environment variables. In local development only, the OTP is returned in the login response if SMTP is not configured, so the app can still be tested without sending email.
+OTP codes are sent by email and are not shown on screen or returned by the API. Real OTP email delivery requires Gmail SMTP credentials in `.env.local` or Vercel environment variables.
 
 ## Environment Variables
 
