@@ -1,16 +1,22 @@
+import { isConfiguredTurnstileValue } from './turnstileConfig'
+
 type TurnstileResponse = {
   success: boolean
   'error-codes'?: string[]
 }
 
 export async function verifyTurnstileToken(token: string, remoteIp?: string | null) {
-  const secret = process.env.TURNSTILE_SECRET_KEY
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim()
+
+  if (!isConfiguredTurnstileValue(secret)) {
+    return true
+  }
 
   if (process.env.NODE_ENV !== 'production' && token === 'local') {
     return true
   }
 
-  if (!secret || !token) {
+  if (!token) {
     return false
   }
 

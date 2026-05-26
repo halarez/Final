@@ -37,7 +37,7 @@ Second admin account:
 
 When Turnstile environment variables are not configured in local development, the app shows a checkbox-style local verification button.
 
-OTP codes are never shown on screen. Real OTP email delivery requires Gmail SMTP credentials in `.env.local` or Vercel environment variables.
+Real OTP email delivery requires Gmail SMTP credentials in `.env.local` or Vercel environment variables. In local development only, the OTP is returned in the login response if SMTP is not configured, so the app can still be tested without sending email.
 
 ## Environment Variables
 
@@ -48,10 +48,12 @@ JWT_SECRET=replace-with-a-long-random-secret
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-cloudflare-turnstile-site-key
 TURNSTILE_SECRET_KEY=your-cloudflare-turnstile-secret-key
 EMAIL_USER=your-gmail-address
-EMAIL_APP_PASSWORD=your-gmail-app-password
+EMAIL_APP_PASSWORD=your-16-character-gmail-app-password
 ```
 
 After changing Vercel environment variables, redeploy the project.
+
+For Gmail, `EMAIL_APP_PASSWORD` is not the normal Gmail password. Enable 2-Step Verification on the sender Gmail account, create an App Password, and use the 16-character value Google gives you.
 
 ## Routes
 

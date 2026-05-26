@@ -38,6 +38,16 @@ export async function POST(request: NextRequest) {
     const emailResult = await sendOtpEmail({ to: normalizedEmail, code: otp })
 
     if (!emailResult.sent) {
+      console.error('OTP email failed', emailResult)
+
+      if (process.env.NODE_ENV !== 'production') {
+        return NextResponse.json({
+          message: `Development OTP for ${normalizedEmail}: ${otp}`,
+          email: normalizedEmail,
+          devOtp: otp,
+        })
+      }
+
       let error = 'OTP email could not be sent. Check EMAIL_USER and the Gmail App Password.'
 
       if (emailResult.reason === 'missing-email-config') {
@@ -46,6 +56,10 @@ export async function POST(request: NextRequest) {
 
       if (emailResult.reason === 'invalid-email-config') {
         error = 'EMAIL_APP_PASSWORD must be the 16-character Gmail App Password. Remove spaces, then restart the server.'
+      }
+
+      if (emailResult.reason === 'smtp-failed') {
+        error = 'OTP email could not be sent by Gmail SMTP. Check that EMAIL_USER is a Gmail account and EMAIL_APP_PASSWORD is a valid 16-character Gmail App Password.'
       }
 
       return NextResponse.json(

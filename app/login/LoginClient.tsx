@@ -2,6 +2,7 @@
 
 import Script from 'next/script'
 import { useMemo, useRef, useState } from 'react'
+import { isTurnstileSiteKeyConfigured } from '@/src/lib/turnstileConfig'
 
 type Step = 'credentials' | 'otp'
 
@@ -35,7 +36,7 @@ export default function LoginClient() {
   const [isLoading, setIsLoading] = useState(false)
   const turnstileRendered = useRef(false)
 
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  const siteKey = isTurnstileSiteKeyConfigured() ? process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY : ''
 
   function renderTurnstile() {
     if (!siteKey || turnstileRendered.current || !window.turnstile) {
